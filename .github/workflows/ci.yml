@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main, staging, dev]
+  pull_requests:
+    branches: [main, staging, dev]
+
+jobs:
+  lintFormatCheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: install python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: install ruff
+        run: pip install ruff
+
+      - name: ruff linter
+        run: ruff check .
+
+      - name: formatter check
+        run: ruff format --check .
+
+  typeCheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: install python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: install mypy
+        run: pip install mypy
+
+      - name: type checking
+        run: mypy .
+
+  # unitTests:
+  #  runs-on: ubuntu-latest
+
+  build/install:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: install python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: build
+        run: pip install -r requirements.txt
+
+      - name: run
+        run: python -c "import scraper.gradientsports_scraper"
