@@ -22,6 +22,8 @@ import sys
 import json
 import time
 import urllib.request
+from typing import Any
+
 
 BASE_URL = "https://fc.gradientsports.com/rankings/player/{player_id}/metrics.data"
 
@@ -46,7 +48,7 @@ def decode(arr: list):
     root node), which is a dict keyed by route id, e.g.
     decoded["routes/rankings/player/metrics"]["data"]["data"]
     """
-    cache = {}
+    cache: dict[int, Any] = {}
 
     def resolve(i):
         if not isinstance(i, int):
