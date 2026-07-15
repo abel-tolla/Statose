@@ -49,7 +49,7 @@ jobs:
   # unitTests:
   #  runs-on: ubuntu-latest
 
-  build/install:
+  build:
     runs-on: ubuntu-latest
 
     steps:
