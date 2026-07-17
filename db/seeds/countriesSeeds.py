@@ -51,6 +51,8 @@ except Exception as e:
 finally:
     #close connection to the database
     print("Closing Connection")
-    if 'cur' in locals(): cur.close()
-    if 'connection' in locals(): connection.close()
+    if 'cur' in locals(): 
+        cur.close()
+    if 'connection' in locals(): 
+        connection.close()
     
