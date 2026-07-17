@@ -105,11 +105,16 @@ def get_player_metrics(player_id: int) -> dict:
 
 
 def main():
+
+    # catch if arguments are less than 2.
     if len(sys.argv) < 2:
         print("Usage: python gradientsports_scraper.py <player_id> [more_ids...]")
         sys.exit(1)
 
+    # taking everything after argument 1 and storing inside player_ids array
     player_ids = sys.argv[1:]
+
+    # where the results will be kept
     results = []
 
     for pid in player_ids:
