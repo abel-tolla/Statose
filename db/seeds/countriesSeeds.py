@@ -5,39 +5,41 @@ from dotenv import load_dotenv
 
 import pycountry
 
-#loads env file
+# loads env file
 load_dotenv()
 
 try:
-    #stores env values into variables
+    # stores env values into variables
     databaseName = os.getenv("PGDATABASE")
     databaseUsername = os.getenv("PGUSER")
     databasePassword = os.getenv("PGPASSWORD")
     databaseHost = os.getenv("PGHOST")
 
-
-    #connect to the database   
+    # connect to the database
     connection = psycopg2.connect(
         dbname=databaseName,
         user=databaseUsername,
         password=databasePassword,
-        host=databaseHost
+        host=databaseHost,
     )
 
-    #create cursor to perform database operations
+    # create cursor to perform database operations
     cur = connection.cursor()
 
-
-    #populate database
+    # populate database
     for country in pycountry.countries:
-        cur.execute("INSERT INTO countries (name, iso2, iso3) values (%s, %s, %s) ON CONFLICT DO NOTHING", 
-                    (country.name, country.alpha_2, country.alpha_3))
-        
+        cur.execute(
+            "INSERT INTO countries (name, iso2, iso3) values (%s, %s, %s) ON CONFLICT DO NOTHING",
+            (country.name, country.alpha_2, country.alpha_3),
+        )
+
     connection.commit()
 
-    
+
 except psycopg2.errors.ProgrammingError as e:
-    print("syntax errors, missing columns, or calling a function with the wrong number of arguments")
+    print(
+        "syntax errors, missing columns, or calling a function with the wrong number of arguments"
+    )
     print(f"Programming error: {e}")
 except psycopg2.errors.OperationalError as e:
     print("Connection drops, times out, or the server shuts down mid-execution.")
@@ -49,10 +51,9 @@ except Exception as e:
     print("Database Error")
     print(f"Programming error: {e}")
 finally:
-    #close connection to the database
+    # close connection to the database
     print("Closing Connection")
-    if 'cur' in locals(): 
+    if "cur" in locals():
         cur.close()
-    if 'connection' in locals(): 
+    if "connection" in locals():
         connection.close()
-    
