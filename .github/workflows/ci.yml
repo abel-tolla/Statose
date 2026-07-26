@@ -11,61 +11,57 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: install python
+      - name: Install Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: install ruff
-        run: pip install ruff
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-      - name: ruff linter
+      - name: Ruff linter
         run: ruff check .
 
-      - name: formatter check
+      - name: Formatter check
         run: ruff format --check .
 
   typeCheck:
+    needs: lintFormatCheck
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: install python
+      - name: Install Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: install dependencies
+      - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: install mypy
-        run: pip install mypy
+      - name: Type checking
+        run: mypy . --ignore-missing-imports
 
-      - name: type checking
-        run: mypy .
-
-  # unitTests:
-  #  runs-on: ubuntu-latest
-
-  build:
+  unitTests:
+    needs: typeCheck
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: install python
+      - name: Install Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: build
+      - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: run
-        run: python -c "import scraper.gradientsports_scraper"
+      - name: Run tests
+        run: python -m pytest tests/
