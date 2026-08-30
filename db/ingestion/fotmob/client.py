@@ -36,3 +36,38 @@ def fetch_league(fotmob_id: int, league: str, season: str):
         browser.close()
 
         return data
+
+
+def fetch_player_minutes(browser, league_id: int, season_id: int):
+
+    page = browser.new_page()
+    page.route("**/*", block_unnecessary)
+
+    page.goto(
+        f"https://www.fotmob.com/leagues/{league_id}/stats/season/{season_id}/players/mins_played"
+    )
+    page.wait_for_load_state("domcontentloaded")
+
+    next_data = page.evaluate(
+        "() => JSON.parse(document.getElementById('__NEXT_DATA__').textContent)"
+    )
+
+    page.close()
+
+    return next_data
+
+
+# block unnecessary request, such as images and etc, so the load time of the page in playwright is faster
+def block_unnecessary(route, request):
+    if request.resource_type in [
+        "image",
+        "stylesheet",
+        "font",
+        "media",
+        "websocket",
+        "other",
+        "eventsource",
+    ]:
+        route.abort()
+    else:
+        route.continue_()
